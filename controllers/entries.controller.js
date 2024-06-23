@@ -1,4 +1,5 @@
 const entry = require('../models/entries.model'); // Importar el modelo de la BBDD
+const {validationResult} = require("express-validator");
 
 //getEntries
 // if(hay email)
@@ -12,8 +13,11 @@ const entry = require('../models/entries.model'); // Importar el modelo de la BB
 const getEntries = async (req, res) => {
     let entries;
     try {
-
-        if (req.query.email) {
+        if (req.query.email || req.query.email == '') {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             entries = await entry.getEntriesByEmail(req.query.email);
         }
         else {
@@ -35,6 +39,10 @@ const getEntries = async (req, res) => {
 
 // Crear entry por email
 const createEntry = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const newEntry = req.body; // {title,content,email,category}
     if ('title' in newEntry && 'content' in newEntry && 'email' in newEntry && 'category' in newEntry) {
         try {
@@ -64,6 +72,10 @@ const createEntry = async (req, res) => {
 
 // Update entry por email
 const updateEntry = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const modifiedEntry = req.body; // {title, content, date, email, category, old_title}
     if ('title' in modifiedEntry && 'content' in modifiedEntry && 'date' in modifiedEntry && 'email' in modifiedEntry && 'category' in modifiedEntry && 'old_title' in modifiedEntry) {
         try {
@@ -83,6 +95,10 @@ const updateEntry = async (req, res) => {
 // deleteEntry
 // DELETE http://localhost:3000/entries?title=titledelaentry --> por email
 const deleteEntry = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     let entries;
     try {
         entries = await entry.deleteEntry(req.query.title);

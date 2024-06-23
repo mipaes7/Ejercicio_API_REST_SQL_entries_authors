@@ -1,11 +1,16 @@
 const author = require('../models/authors.model');
+const {validationResult} = require("express-validator");
 
 // GET http://localhost:3000/api/authors --> ALL
 // GET http://localhost:3000/api/authors?email=hola@gmail.com --> por email
 const getAuthors = async (req, res) => {
     let authors;
     try {
-        if (req.query.email) {
+        if (req.query.email || req.query.email == '') {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             authors = await author.getAuthorByEmail(req.query.email);
         }
         else {
@@ -28,6 +33,10 @@ const getAuthors = async (req, res) => {
 
 // Crear autor por email
 const createAuthor = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const newAuthor = req.body; // {name,surname,email,image}
     if ('name' in newAuthor && 'surname' in newAuthor && 'email' in newAuthor && 'image' in newAuthor) {
         try {
@@ -56,6 +65,10 @@ const createAuthor = async (req, res) => {
 
 // Update author por email
 const updateAuthor = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const modifiedAuthor = req.body; // {name, surname, email, image, ref_email}
     if ('name' in modifiedAuthor && 'surname' in modifiedAuthor && 'email' in modifiedAuthor && 'image' in modifiedAuthor && 'ref_email' in modifiedAuthor) {
         try {
@@ -75,6 +88,10 @@ const updateAuthor = async (req, res) => {
 // deleteAuthor
 // DELETE http://localhost:3000/api/authors?email=email@correo.es --> por email
 const deleteAuthor = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     let authors;
     try {
         authors = await author.deleteAuthor(req.query.email);

@@ -1,11 +1,13 @@
 const express = require('express');
 const authorsController = require("../controllers/authors.controller");
 const router = express.Router();
+const { validateGetAuthorsByEmail, validateCreateAuthor, validateUpdateAuthor, validateDeleteAuthor } = require("../validators/authors.validator");
 
-router.get('/', authorsController.getAuthors);
-router.post('/', authorsController.createAuthor);
-router.put('/', authorsController.updateAuthor);
-router.delete('/', authorsController.deleteAuthor);
+
+router.get('/', validateGetAuthorsByEmail, authorsController.getAuthors);
+router.post('/', validateCreateAuthor, authorsController.createAuthor);
+router.put('/', validateUpdateAuthor, authorsController.updateAuthor);
+router.delete('/', validateDeleteAuthor, authorsController.deleteAuthor);
 
 
 module.exports = router;

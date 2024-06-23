@@ -2,11 +2,12 @@ const express = require('express');
 // Rutas de productos
 const entriesController = require("../controllers/entries.controller");
 const router = express.Router();
+const { validateGetEntriesByEmail, validateCreateEntries, validateDeleteEntry, validateUpdateEntry } = require("../validators/entries.validator");
 
-router.get('/', entriesController.getEntries);
-router.post('/', entriesController.createEntry);
-router.put('/', entriesController.updateEntry);
-router.delete('/', entriesController.deleteEntry);
+router.get('/', validateGetEntriesByEmail, entriesController.getEntries);
+router.post('/', validateCreateEntries, entriesController.createEntry);
+router.put('/', validateUpdateEntry, entriesController.updateEntry);
+router.delete('/', validateDeleteEntry, entriesController.deleteEntry);
 
 module.exports = router;
 

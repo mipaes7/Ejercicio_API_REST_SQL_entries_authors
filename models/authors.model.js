@@ -2,11 +2,6 @@ const { Pool } = require('pg');
 const pool = require('../config/db_pgsql')
 const queries = require('../queries/authors.queries') // Queries SQL
 
-// const connection = 'postgres://demonodesql_user:F9Yd72thuj4tr6wojw6YVDAUVLqd6Fx0@dpg-cpop272j1k6c73ac5aog-a.frankfurt-postgres.render.com/demonodesql?sslmode=require';
-// const pool = new Pool({
-//     connection
-//   });
-
 // GET
 const getAuthorByEmail = async (email) => {
     let client, result;
